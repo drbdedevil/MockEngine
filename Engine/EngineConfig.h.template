@@ -1,0 +1,5 @@
+#pragma once
+#define Engine_VERSION_MAJOR @MockEngine_VERSION_MAJOR@
+#define Engine_VERSION_MINOR @MockEngine_VERSION_MINOR@
+#define Engine_VERSION_PATCH @MockEngine_VERSION_PATCH@
+#define Engine_VERSION_STRING "@MockEngine_VERSION@"

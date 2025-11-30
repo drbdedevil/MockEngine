@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <memory.h>
+#include <memory>
 #include <Core/Utility.h>
 
 namespace Mock

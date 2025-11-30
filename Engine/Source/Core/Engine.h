@@ -5,11 +5,11 @@
 
 namespace Mock
 {
-	class Engine final
-	{
-    public:
-        Engine();
+class Engine final
+{
+public:
+    Engine();
 
-		static constexpr std::string_view version() { return Engine_VERSION_STRING; }
-	};
+    static constexpr std::string_view version() { return Engine_VERSION_STRING; }
+};
 }  // namespace Mock

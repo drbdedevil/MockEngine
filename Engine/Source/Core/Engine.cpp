@@ -1,9 +1,11 @@
 #include "Engine.h"
-#include <iostream>
+
+#include <format>
+#include "Log/Log.h"
 
 using namespace Mock;
 
-Engine::Engine() 
+Engine::Engine()
 {
-    std::cout << "Initializing Mock Engine " << version() << std::endl;
+    Log::getInstance().log(LogVerbosity::Display, std::format("Initializing MockEngine-v{}", version()));
 }

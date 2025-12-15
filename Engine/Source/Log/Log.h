@@ -12,7 +12,17 @@ enum class LogVerbosity : uint8_t
     Display = 1,
     Warning = 2,
     Error = 3,
-    Fatal = 4
+    Log = 4,
+    Fatal = 5
+};
+
+struct LogCategory
+{
+    explicit LogCategory(const std::string& name) : m_name(name) {}
+    std::string name() const { return m_name; }
+
+private:
+    std::string m_name;
 };
 
 class Log final : public NonCopyable
@@ -24,7 +34,7 @@ public:
         return instance;
     }
 
-    void log(LogVerbosity verbosity, const std::string& message) const;
+    void log(const LogCategory& category, LogVerbosity verbosity, const std::string& message) const;
 
 private:
     Log();
@@ -33,5 +43,11 @@ private:
     class Impl;
     std::unique_ptr<Impl> m_pImpl;
 };
+
+#define DEFINE_LOG_CATEGORY_STATIC(logName)    \
+    namespace                                  \
+    {                                          \
+    const Mock::LogCategory logName(#logName); \
+    }
 
 }  // namespace Mock

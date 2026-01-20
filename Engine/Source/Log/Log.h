@@ -79,18 +79,19 @@ concept ValidVerbosityLevel = V == LogVerbosity::NoLogging   //
     const Mock::LogCategory logName(#logName); \
     }
 
-#define M_LOG_IMPL(categoryName, verbosity, showLocation, formatStr, ...)                                                                \
-    do                                                                                                                                    \
-    {                                                                                                                                     \
-        if constexpr (Mock::LogVerbosity::verbosity >= Mock::c_minVerbosity && Mock::LogVerbosity::verbosity <= Mock::c_maxVerbostiy)     \
-        {                                                                                                                                 \
-            static_assert(Mock::ValidVerbosityType<decltype(Mock::LogVerbosity::verbosity)>, "Verbosity must be type of LogVerbosity...");   \
-            static_assert(Mock::ValidVerbosityLevel<Mock::LogVerbosity::verbosity>, "No such as LogVerbosity...");  \
-            static_assert(Mock::ValidLogCategory<decltype(categoryName)>, "Category must be of type LogCategory...");                     \
-            static_assert(                                                                                                                \
-                Mock::LoggableMessage<decltype(formatStr)>, "Message must be convertible to std::string or std::string_view...");         \
-            Mock::Log::getInstance().log(categoryName, Mock::LogVerbosity::verbosity, std::format(formatStr, __VA_ARGS__), showLocation); \
-        }                                                                                                                                 \
+#define M_LOG_IMPL(categoryName, verbosity, showLocation, formatStr, ...)                                                                  \
+    do                                                                                                                                     \
+    {                                                                                                                                      \
+        if constexpr (Mock::LogVerbosity::verbosity >= Mock::c_minVerbosity && Mock::LogVerbosity::verbosity <= Mock::c_maxVerbostiy)      \
+        {                                                                                                                                  \
+            static_assert(Mock::ValidVerbosityType<decltype(Mock::LogVerbosity::verbosity)>, "Verbosity must be type of LogVerbosity..."); \
+            static_assert(Mock::ValidVerbosityLevel<Mock::LogVerbosity::verbosity>, "No such as LogVerbosity...");                         \
+            static_assert(Mock::ValidLogCategory<decltype(categoryName)>, "Category must be of type LogCategory...");                      \
+            static_assert(                                                                                                                 \
+                Mock::LoggableMessage<decltype(formatStr)>, "Message must be convertible to std::string or std::string_view...");          \
+            Mock::Log::getInstance().log(                                                                                                  \
+                categoryName, Mock::LogVerbosity::verbosity, std::format(formatStr __VA_OPT__(, ) __VA_ARGS__), showLocation);             \
+        }                                                                                                                                  \
     } while (0)
 
 #define M_LOG(categoryName, verbosity, formatStr, ...) M_LOG_IMPL(categoryName, verbosity, false, formatStr, __VA_ARGS__);

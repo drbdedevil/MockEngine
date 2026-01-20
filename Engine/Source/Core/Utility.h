@@ -21,5 +21,5 @@ protected:
     #define PLATFORM_BREAK() __debugbreak();
 #else
     #include <signal.h>
-    define PLATFORM_BREAK() raise(SIGTRAP);
+    #define PLATFORM_BREAK() raise(SIGTRAP);
 #endif

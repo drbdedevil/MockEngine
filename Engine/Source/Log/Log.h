@@ -4,6 +4,8 @@
 #include <string_view>
 #include <memory>
 #include <source_location>
+#include <concepts>
+#include <format>
 
 #include <Core/Utility.h>
 
@@ -77,7 +79,7 @@ concept ValidVerbosityLevel = V == LogVerbosity::NoLogging   //
     const Mock::LogCategory logName(#logName); \
     }
 
-#define LE_LOG_IMPL(categoryName, verbosity, showLocation, formatStr, ...)                                                                \
+#define M_LOG_IMPL(categoryName, verbosity, showLocation, formatStr, ...)                                                                \
     do                                                                                                                                    \
     {                                                                                                                                     \
         if constexpr (Mock::LogVerbosity::verbosity >= Mock::c_minVerbosity && Mock::LogVerbosity::verbosity <= Mock::c_maxVerbostiy)     \
@@ -91,6 +93,6 @@ concept ValidVerbosityLevel = V == LogVerbosity::NoLogging   //
         }                                                                                                                                 \
     } while (0)
 
-#define M_LOG(categoryName, verbosity, formatStr, ...) LE_LOG_IMPL(categoryName, verbosity, false, formatStr, __VA_ARGS__);
+#define M_LOG(categoryName, verbosity, formatStr, ...) M_LOG_IMPL(categoryName, verbosity, false, formatStr, __VA_ARGS__);
 
-#define M_LOG_DEBUG(categoryName, verbosity, formatStr, ...) LE_LOG_IMPL(categoryName, verbosity, true, formatStr, __VA_ARGS__);
+#define M_LOG_DEBUG(categoryName, verbosity, formatStr, ...) M_LOG_IMPL(categoryName, verbosity, true, formatStr, __VA_ARGS__);

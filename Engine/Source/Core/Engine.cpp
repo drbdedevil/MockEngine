@@ -2,6 +2,7 @@
 
 #include <format>
 #include "Log/Log.h"
+#include "Window/GLFW/GLFWWindowManager.h"
 
 using namespace Mock;
 
@@ -9,8 +10,27 @@ DEFINE_LOG_CATEGORY_STATIC(LogEngine);
 
 Engine::Engine()
 {
-    M_LOG(LogEngine, Display, "Initializing MockEngine-v{}", version());
-    // M_LOG_DEBUG(LogEngine, Fatal, "Fatal!");
+    M_LOG(LogEngine, Display, "Yooo... Initializing MockEngine-v{}", version());
 
-    M_LOG_DEBUG(LogEngine, Display, "Yooo...");
+    m_windowManager = std::make_unique<GLFWWindowManager>();
+
+
+
+    m_initialized = true;
+}
+
+Mock::Engine::~Engine() {}
+
+void Engine::run() 
+{
+    if (!m_initialized)
+    {
+        M_LOG(LogEngine, Error, "Cannot run: MockEngine is not initialized...");
+        return;
+    }
+
+    while (true)
+    {
+
+    }
 }

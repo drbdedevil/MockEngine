@@ -3,7 +3,8 @@
 
 int main()
 {
-    const Mock::Engine engine = Mock::Engine();
+    Mock::Engine engine = Mock::Engine();
+    engine.run();
 
 	return EXIT_SUCCESS;
 }

@@ -1,7 +1,6 @@
 #include "GLFWWindowManager.h"
 
 #include "Log/Log.h"
-#include "GLFWWindow.h"
 #include "GLFW/glfw3.h"
 
 using namespace Mock;
@@ -23,17 +22,75 @@ GLFWWindowManager::GLFWWindowManager()
 
 	m_initialized = true;
     M_LOG(LogGLFWWindowManager, Display, "GLFW initialized successfully!");
-
-	m_window = std::make_shared<GLFWWindow>();
 }
 
 GLFWWindowManager::~GLFWWindowManager() 
 {
+    m_windows.clear();
 	if (m_initialized)
 	{
+        glfwSetErrorCallback(nullptr);
         glfwTerminate();
 	}
 
 	m_initialized = false;
     M_LOG(LogGLFWWindowManager, Display, "GLFW shutdown!");
+}
+
+void Mock::GLFWWindowManager::update()
+{
+    if (!m_initialized) return;
+
+	glfwPollEvents();
+    cleanupClosedWindows();
+}
+
+bool GLFWWindowManager::areAllWindowsClosed() const
+{
+    return m_windows.empty();
+}
+
+std::expected<WindowId, WindowCreationError> GLFWWindowManager::createWindow(const WindowSettings& settings)
+{
+    if (!m_initialized)
+    {
+        M_LOG(LogGLFWWindowManager, Error, "Cannot create window: GLFW is not initialized!");
+        return std::unexpected(WindowCreationError::ManagerIsNotInitialized);
+    }
+
+    std::shared_ptr<GLFWWindow> window = std::make_shared<GLFWWindow>(settings);
+    if (!window->isValid())
+    {
+        M_LOG(LogGLFWWindowManager, Error, "Failed to create GLFW window!");
+        return std::unexpected(WindowCreationError::CreationFailed);
+    }
+
+    const WindowId id = m_windowIdCounter++;
+    m_windows[id] = window;
+
+    M_LOG(LogGLFWWindowManager, Display, "Successfuly added window with id: {}", id.value);
+
+    return id;
+}
+
+std::shared_ptr<GLFWWindow> GLFWWindowManager::getWindowById(WindowId id) const
+{
+    const auto it = m_windows.find(id);
+
+    return it != m_windows.end() ? it->second : nullptr;
+}
+
+void Mock::GLFWWindowManager::cleanupClosedWindows() 
+{
+    auto it = m_windows.begin();
+    while (it != m_windows.end())
+    {
+        if (it->second->shouldClose())
+        {
+            M_LOG(LogGLFWWindowManager, Display, "Successfuly closed window with id: {}", it->first.value);
+            it = m_windows.erase(it);
+            continue;
+        }
+        ++it;
+    }
 }

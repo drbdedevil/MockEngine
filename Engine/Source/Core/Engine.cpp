@@ -2,6 +2,7 @@
 
 #include <format>
 #include "Log/Log.h"
+#include <format>
 #include "Window/GLFW/GLFWWindowManager.h"
 
 using namespace Mock;
@@ -14,7 +15,17 @@ Engine::Engine()
 
     m_windowManager = std::make_unique<GLFWWindowManager>();
 
+    const auto windowResult = m_windowManager->createWindow(WindowSettings{});
+    if (!windowResult)
+    {
+        M_LOG(LogEngine, Error, "Failed to create main window!");
+        return;
+    }
 
+    if (std::shared_ptr<GLFWWindow> window = m_windowManager->getWindowById(windowResult.value()))
+    {
+        window->setTitle(std::format("MockEngine v{}", version()));
+    }
 
     m_initialized = true;
 }
@@ -29,8 +40,8 @@ void Engine::run()
         return;
     }
 
-    while (true)
+    while (!m_windowManager->areAllWindowsClosed())
     {
-
+        m_windowManager->update();
     }
 }

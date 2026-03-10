@@ -1,9 +1,14 @@
 #include "Core/Engine.h"
-#include <stdlib.h>
+#include <cstdlib>
+#include <memory>
+
+#include "Window/GLFW/GLFWWindowManager.h"
 
 int main()
 {
-    Mock::Engine engine = Mock::Engine();
+    std::unique_ptr<Mock::GLFWWindowManager> windowManager = std::make_unique<Mock::GLFWWindowManager>();
+
+    Mock::Engine engine = Mock::Engine(std::move(windowManager));
     engine.run();
 
 	return EXIT_SUCCESS;

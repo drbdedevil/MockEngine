@@ -1,34 +1,30 @@
 #pragma once
 
-#include "GLFWWindow.h"
+#include "Window/IWindow.h"
+#include "Window/IWindowManager.h"
 
 #include <memory>
 #include <unordered_map>
 #include <expected>
 
+#include "Core/Utility.h"
+
 namespace Mock
 {
-
-enum class WindowCreationError
-{
-    ManagerIsNotInitialized = 0,
-    CreationFailed = 1
-};
-
-class GLFWWindowManager  final
+class GLFWWindowManager final : public IWindowManager, public NonCopyable
 {
 public:
     GLFWWindowManager();
-    ~GLFWWindowManager();
+    ~GLFWWindowManager() override;
 
-    void update();
-    bool areAllWindowsClosed() const;
+    void update() override;
+    bool areAllWindowsClosed() const override;
 
-    std::expected<WindowId, WindowCreationError> createWindow(const WindowSettings& settings);
-    std::shared_ptr<GLFWWindow> getWindowById(WindowId id) const;
+    std::expected<WindowId, WindowCreationError> createWindow(const WindowSettings& settings) override;
+    std::shared_ptr<IWindow> getWindowById(WindowId id) const override;
 
 private:
-    std::unordered_map<WindowId, std::shared_ptr<GLFWWindow>> m_windows;
+    std::unordered_map<WindowId, std::shared_ptr<IWindow>> m_windows;
     WindowId m_windowIdCounter{1};
     bool m_initialized{false};
 

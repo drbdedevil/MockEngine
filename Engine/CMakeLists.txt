@@ -27,6 +27,8 @@ set(ENGINE_SOURCES
     Source/Window/GLFW/GLFWWindow.h
     Source/Window/GLFW/GLFWWindowManager.cpp
     Source/Window/GLFW/GLFWWindowManager.h
+    Source/Event/Event.h
+    Source/Event/InputEvent.h
 )
 
 add_library(${PROJECT_NAME}Lib ${ENGINE_SOURCES})

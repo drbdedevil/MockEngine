@@ -59,7 +59,7 @@ std::expected<WindowId, WindowCreationError> GLFWWindowManager::createWindow(con
         return std::unexpected(WindowCreationError::ManagerIsNotInitialized);
     }
 
-    std::shared_ptr<GLFWWindow> window = std::make_shared<GLFWWindow>(settings);
+    std::shared_ptr<GLFWWindow> window = std::make_shared<GLFWWindow>(m_windowIdCounter, settings);
     if (!window->isValid())
     {
         M_LOG(LogGLFWWindowManager, Error, "Failed to create GLFW window!");
@@ -69,7 +69,7 @@ std::expected<WindowId, WindowCreationError> GLFWWindowManager::createWindow(con
     const WindowId id = m_windowIdCounter++;
     m_windows[id] = window;
 
-    M_LOG(LogGLFWWindowManager, Display, "Successfuly added window with id: {}", id.value);
+    M_LOG(LogGLFWWindowManager, Display, "Successfully added window with id: {}", id.value);
 
     return id;
 }
@@ -88,7 +88,7 @@ void Mock::GLFWWindowManager::cleanupClosedWindows()
     {
         if (it->second->shouldClose())
         {
-            M_LOG(LogGLFWWindowManager, Display, "Successfuly closed window with id: {}", it->first.value);
+            M_LOG(LogGLFWWindowManager, Display, "Successfully closed window with id: {}", it->first.value);
             it = m_windows.erase(it);
             continue;
         }
